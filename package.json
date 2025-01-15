@@ -1,7 +1,6 @@
 {
   "name": "odyssey-gate-backend",
   "version": "0.0.1",
-  "type": "module",
   "description": "Backend for Odyssey Gate",
   "author": "Josué Bayidikila | Keryanne Isidore",
   "private": true,
