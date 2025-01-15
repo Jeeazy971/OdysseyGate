@@ -5,6 +5,7 @@ const parser = require('@typescript-eslint/parser');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// module
 module.exports = [
   {
     ignores: ['node_modules/**', 'dist/**'],
