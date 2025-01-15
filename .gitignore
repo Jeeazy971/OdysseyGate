@@ -67,10 +67,6 @@ docker-compose.override.yml
 # Cache
 .cache/
 
-# CI/CD
-.github/
-.gitlab/
-
 # Temporary environment files
 .env.development
 .env.production
