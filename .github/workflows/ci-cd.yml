@@ -5,9 +5,11 @@ on:
     branches:
       - develop
       - main
+      - feature/*
   pull_request:
     branches:
       - develop
+      - feature/*
 
 jobs:
    ci:
