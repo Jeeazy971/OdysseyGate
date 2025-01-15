@@ -1,0 +1,47 @@
+# Ignorer les dossiers de dépendances
+node_modules
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Sorties de compilation
+dist/
+build/
+
+# Fichiers temporaires ou de logs
+logs/
+*.log
+.temp
+.tmp
+*.pid
+*.pid.lock
+
+# Fichiers d'environnement
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Configuration spécifique à Docker Compose
+docker-compose.override.yml
+
+# Fichiers générés par le système
+.DS_Store
+Thumbs.db
+
+# IDEs et éditeurs
+.idea/
+.vscode/
+.project
+.classpath
+.settings/
+*.sublime-workspace
+
+# Tests et couvertures
+coverage/
+.nyc_output/
+
+# Caches
+.cache/
