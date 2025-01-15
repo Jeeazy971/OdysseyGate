@@ -7,10 +7,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default [
   {
-    ignores: ['node_modules/**', 'dist/**'], // Exclut les dossiers inutiles
+    ignores: ['node_modules/**', 'dist/**'],
   },
   {
-    files: ['src/**/*.ts', 'test/**/*.ts'], // Inclut les fichiers TypeScript dans src/ et test/
+    files: ['src/**/*.ts', 'test/**/*.ts'],
     languageOptions: {
       parser: parser,
       parserOptions: {
