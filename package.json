@@ -1,6 +1,7 @@
 {
   "name": "odyssey-gate-backend",
   "version": "0.0.1",
+  "type": "module",
   "description": "Backend for Odyssey Gate",
   "author": "Josué Bayidikila | Keryanne Isidore",
   "private": true,
@@ -11,8 +12,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\" --fix --no-ignore",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
