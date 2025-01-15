@@ -1,11 +1,11 @@
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import eslintPlugin from '@typescript-eslint/eslint-plugin';
-import parser from '@typescript-eslint/parser';
+const { fileURLToPath } = require('url');
+const { dirname } = require('path');
+const eslintPlugin = require('@typescript-eslint/eslint-plugin');
+const parser = require('@typescript-eslint/parser');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default [
+module.exports = [
   {
     ignores: ['node_modules/**', 'dist/**'],
   },
