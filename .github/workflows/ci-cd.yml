@@ -35,7 +35,7 @@ jobs:
 
       # 5. Lancer le lint
       - name: Lint code
-        run: eslint --config .eslintrc.js "{src,apps,libs,test}/**/*.ts" --fix
+        run: npm run lint
 
       # 6. Effectuer un build
       - name: Build application
