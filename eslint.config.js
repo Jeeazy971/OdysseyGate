@@ -3,9 +3,10 @@ const { dirname } = require('path');
 const eslintPlugin = require('@typescript-eslint/eslint-plugin');
 const parser = require('@typescript-eslint/parser');
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// Vérifiez si __dirname existe déjà
+const currentDirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url));
 
-// module
+// Module exports
 module.exports = [
   {
     ignores: ['node_modules/**', 'dist/**'],
@@ -16,7 +17,7 @@ module.exports = [
       parser: parser,
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: currentDirname,
         sourceType: 'module',
       },
     },
