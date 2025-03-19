@@ -1,13 +1,13 @@
-const { fileURLToPath } = require('url');
-const { dirname } = require('path');
-const eslintPlugin = require('@typescript-eslint/eslint-plugin');
-const parser = require('@typescript-eslint/parser');
+// eslint.config.js (utilisé comme ES module)
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import eslintPlugin from '@typescript-eslint/eslint-plugin';
+import parser from '@typescript-eslint/parser';
 
-// Vérifiez si __dirname existe déjà
-const currentDirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url));
+// Détermine __dirname
+const currentDirname = dirname(fileURLToPath(import.meta.url));
 
-// Module exports
-module.exports = [
+export default [
   {
     ignores: ['node_modules/**', 'dist/**'],
   },
