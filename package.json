@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "lint": "eslint --config ./eslint.config.cjs 'src/**/*.ts' 'test/**/*.ts' --fix --no-ignore",
+    "lint": "eslint --config ./eslint.config.js 'src/**/*.ts' 'test/**/*.ts' --fix --no-ignore",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
