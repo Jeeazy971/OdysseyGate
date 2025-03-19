@@ -1,11 +1,28 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_mysql_password
+      MYSQL_DATABASE: odyssey_gate_dev
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
       dockerfile: Dockerfile
-      target: ${TARGET_STAGE:-development} # Par défaut, utilise "development"
+      target: ${TARGET_STAGE:-development}
     ports:
       - "3000:3000"
     volumes:
@@ -13,3 +30,14 @@ services:
       - /app/node_modules
     environment:
       NODE_ENV: ${NODE_ENV:-development}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: your_mysql_password
+      DB_NAME: odyssey_gate_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
