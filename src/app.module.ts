@@ -1,8 +1,8 @@
-// src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './core/database/database.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -11,9 +11,8 @@ import { DatabaseModule } from './core/database/database.module';
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
     }),
     DatabaseModule,
-    // Ajoutez ici d'autres modules (AuthModule, BookingModule, etc.)
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }
