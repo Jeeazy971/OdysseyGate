@@ -1,10 +1,9 @@
-// src/auth/auth.controller.ts
-
 import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -21,5 +20,13 @@ export class AuthController {
             throw new BadRequestException('Passwords do not match');
         }
         return this.authService.register(dto);
+    }
+
+    @Post('login')
+    @ApiOperation({ summary: 'Connexion d\'un utilisateur existant' })
+    @ApiResponse({ status: 200, description: 'Connexion réussie. Retourne un token JWT.' })
+    @ApiResponse({ status: 401, description: 'Identifiants invalides.' })
+    async login(@Body() dto: LoginDto) {
+        return this.authService.login(dto);
     }
 }
