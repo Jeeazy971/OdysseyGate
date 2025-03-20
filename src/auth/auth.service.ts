@@ -14,7 +14,7 @@ export class AuthService {
         private readonly userRepository: Repository<UserEntity>,
     ) { }
 
-    async register(dto: RegisterUserDto) {
+    async register(dto: RegisterUserDto): Promise<UserEntity> {
         // Vérifier si l'email existe déjà
         const existingUser = await this.userRepository.findOneBy({ email: dto.email });
         if (existingUser) {
@@ -32,7 +32,7 @@ export class AuthService {
             password: hashedPassword,
         });
 
-        // Sauvegarder en base
+        // Sauvegarder l'utilisateur en base de données
         return this.userRepository.save(user);
     }
 }

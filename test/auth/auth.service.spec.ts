@@ -9,14 +9,11 @@ import { ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { RegisterUserDto } from '../../src/auth/dto/register-user.dto';
 
-// Petit helper pour générer un mock de repository
-type MockType<T> = {
-    [P in keyof T]?: jest.Mock<any>;
-};
+type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('AuthService', () => {
-    let authService: AuthService;
-    let userRepositoryMock: MockType<Repository<UserEntity>>;
+    let service: AuthService;
+    let userRepositoryMock: MockRepository<UserEntity>;
 
     beforeEach(async () => {
         userRepositoryMock = {
@@ -35,50 +32,48 @@ describe('AuthService', () => {
             ],
         }).compile();
 
-        authService = module.get<AuthService>(AuthService);
+        service = module.get<AuthService>(AuthService);
     });
 
     it('should register a new user successfully', async () => {
-        // Simuler que l'email n'est pas déjà utilisé
+        // Simuler qu'aucun utilisateur n'existe pour l'email donné
         userRepositoryMock.findOneBy.mockResolvedValue(null);
-        userRepositoryMock.create.mockImplementation((entity) => entity);
-        userRepositoryMock.save.mockImplementation(async (entity) => ({
-            ...entity,
-            id: 1, // on simule un ID auto-généré
+        // Simuler la création en mémoire de l'utilisateur
+        userRepositoryMock.create.mockImplementation((dto) => dto);
+        // Simuler la sauvegarde et retourner un utilisateur avec un id généré
+        userRepositoryMock.save.mockImplementation(async (user) => ({
+            ...user,
+            id: 1,
         }));
 
-        // Données de test
         const dto: RegisterUserDto = {
-            nom: 'John',
-            prenom: 'Doe',
+            nom: 'Doe',
+            prenom: 'John',
             email: 'john.doe@example.com',
-            password: 'password',
-            confirmPassword: 'password',
-        };
-
-        const result = await authService.register(dto);
-
-        expect(userRepositoryMock.findOneBy).toHaveBeenCalledWith({ email: 'john.doe@example.com' });
-        expect(userRepositoryMock.save).toHaveBeenCalledTimes(1);
-        expect(result).toHaveProperty('id', 1);
-        expect(result).toHaveProperty('email', 'john.doe@example.com');
-        // Vérifier que le mot de passe est haché
-        const isHashed = await bcrypt.compare(dto.password, result.password);
-        expect(isHashed).toBe(true);
-    });
-
-    it('should throw ConflictException if email is already taken', async () => {
-        // Simuler qu'un user existe déjà avec cet email
-        userRepositoryMock.findOneBy.mockResolvedValue({ id: 42, email: 'existing@example.com' });
-
-        const dto: RegisterUserDto = {
-            nom: 'Alice',
-            prenom: 'Smith',
-            email: 'existing@example.com',
             password: 'mypassword',
             confirmPassword: 'mypassword',
         };
 
-        await expect(authService.register(dto)).rejects.toThrow(ConflictException);
+        const result = await service.register(dto);
+        expect(userRepositoryMock.findOneBy).toHaveBeenCalledWith({ email: dto.email });
+        expect(userRepositoryMock.save).toHaveBeenCalled();
+        expect(result).toHaveProperty('id', 1);
+        // Vérifier que le mot de passe est bien haché
+        const isHashed = await bcrypt.compare(dto.password, result.password);
+        expect(isHashed).toBe(true);
+    });
+
+    it('should throw a ConflictException if email already exists', async () => {
+        // Simuler qu'un utilisateur existe déjà avec cet email
+        userRepositoryMock.findOneBy.mockResolvedValue({ id: 42, email: 'existing@example.com' });
+        const dto: RegisterUserDto = {
+            nom: 'Alice',
+            prenom: 'Smith',
+            email: 'existing@example.com',
+            password: 'secret123',
+            confirmPassword: 'secret123',
+        };
+
+        await expect(service.register(dto)).rejects.toThrow(ConflictException);
     });
 });
