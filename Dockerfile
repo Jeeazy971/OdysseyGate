@@ -1,5 +1,5 @@
 # Étape de base : Installation des dépendances
-FROM node:18 AS base
+FROM node:22.9.0-alpine AS base
 
 # Définir le répertoire de travail
 WORKDIR /app
