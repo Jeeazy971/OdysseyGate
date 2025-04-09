@@ -1,4 +1,3 @@
-// src/voyage/voyage.service.ts
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -37,12 +36,14 @@ export class VoyageService {
       );
     }
 
-    // Création de l'entité Voyage
+    // Création de l'entité Voyage avec les champs obligatoires et optionnels
     const voyage = this.voyageRepository.create({
       destination: dto.destination,
       dateDepart: depart,
       dateArrivee: arrivee,
       nombreVoyageurs: dto.nombreVoyageurs,
+      villeDepart: dto.villeDepart,
+      imageUrl: dto.imageUrl,
       user,
     });
 

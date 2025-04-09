@@ -9,11 +9,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserEntity } from '../../auth/entities/user.entity';
 import { TransportEntity } from './transport.entity';
 import { LogementEntity } from './logement.entity';
 import { ActiviteEntity } from './activite.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('voyages')
 export class VoyageEntity {
@@ -42,6 +42,22 @@ export class VoyageEntity {
   @Column()
   @ApiProperty({ example: 2, description: 'Nombre de voyageurs' })
   nombreVoyageurs: number;
+
+  // Nouvelle colonne pour l'image de la destination
+  @Column({ nullable: true })
+  @ApiPropertyOptional({
+    example: 'https://example.com/image.jpg',
+    description: 'Image de la destination (URL)',
+  })
+  imageUrl?: string;
+
+  // Nouvelle colonne pour la ville de départ
+  @Column({ nullable: true })
+  @ApiPropertyOptional({
+    example: 'Lyon',
+    description: 'Ville de départ',
+  })
+  villeDepart?: string;
 
   @ManyToOne(() => UserEntity, (user) => user.voyages, { eager: true })
   @ApiProperty({

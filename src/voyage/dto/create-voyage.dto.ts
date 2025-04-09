@@ -1,58 +1,5 @@
-// src/voyage/dto/create-voyage.dto.ts
-import {
-  IsString,
-  IsDateString,
-  IsNumber,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsString, IsDateString, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-
-class TransportInfo {
-  @ApiProperty({ example: 'Train', description: 'Type de transport' })
-  @IsString()
-  type: string;
-
-  @ApiPropertyOptional({
-    example: 'SNCF',
-    description: 'Compagnie de transport',
-  })
-  @IsOptional()
-  @IsString()
-  compagnie?: string;
-}
-
-class LogementInfo {
-  @ApiProperty({ example: 'Hôtel XYZ', description: 'Nom du logement' })
-  @IsString()
-  nom: string;
-
-  @ApiPropertyOptional({
-    example: '12 rue de la Paix, Paris',
-    description: 'Adresse du logement',
-  })
-  @IsOptional()
-  @IsString()
-  adresse?: string;
-}
-
-class ActiviteInfo {
-  @ApiProperty({
-    example: 'Visite guidée',
-    description: "Description de l'activité",
-  })
-  @IsString()
-  description: string;
-
-  @ApiPropertyOptional({
-    example: 'Louvre, Paris',
-    description: "Lieu de l'activité",
-  })
-  @IsOptional()
-  @IsString()
-  lieu?: string;
-}
 
 export class CreateVoyageDto {
   @ApiProperty({ example: 'Paris', description: 'Destination du voyage' })
@@ -77,30 +24,36 @@ export class CreateVoyageDto {
   @IsNumber()
   nombreVoyageurs: number;
 
-  @ApiPropertyOptional({
-    description: 'Informations de transport',
-    type: TransportInfo,
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => TransportInfo)
-  transport?: TransportInfo;
+  @ApiProperty({ example: 'Lyon', description: 'Ville de départ' })
+  @IsString()
+  villeDepart: string;
 
   @ApiPropertyOptional({
-    description: 'Informations de logement',
-    type: LogementInfo,
+    example: 'https://example.com/image.jpg',
+    description: 'Image de la destination (URL)',
   })
   @IsOptional()
-  @ValidateNested()
-  @Type(() => LogementInfo)
-  logement?: LogementInfo;
+  @IsString()
+  imageUrl?: string;
 
-  @ApiPropertyOptional({
-    description: "Informations d'activité",
-    type: ActiviteInfo,
-  })
+  @ApiPropertyOptional({ description: 'Transport associé au voyage' })
   @IsOptional()
-  @ValidateNested()
-  @Type(() => ActiviteInfo)
-  activite?: ActiviteInfo;
+  transport?: {
+    type: string;
+    compagnie?: string;
+  };
+
+  @ApiPropertyOptional({ description: 'Logement associé au voyage' })
+  @IsOptional()
+  logement?: {
+    nom: string;
+    adresse: string;
+  };
+
+  @ApiPropertyOptional({ description: 'Activité associée au voyage' })
+  @IsOptional()
+  activite?: {
+    description: string;
+    lieu: string;
+  };
 }
