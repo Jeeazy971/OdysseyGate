@@ -6,18 +6,6 @@ export class CreateVoyageDto {
   @IsString()
   destination: string;
 
-  @ApiPropertyOptional({
-    example: 'https://example.com/image.jpg',
-    description: 'Image de la destination (URL)',
-  })
-  @IsOptional()
-  @IsString()
-  imageUrl?: string;
-
-  @ApiProperty({ example: 'Lyon', description: 'Ville de départ' })
-  @IsString()
-  villeDepart: string;
-
   @ApiProperty({
     example: '2025-04-10',
     description: 'Date de départ (format ISO)',
@@ -36,23 +24,36 @@ export class CreateVoyageDto {
   @IsNumber()
   nombreVoyageurs: number;
 
-  // Propriétés optionnelles pour transport, logement, activité
-  @ApiPropertyOptional({ description: 'Informations sur le transport' })
+  @ApiProperty({ example: 'Lyon', description: 'Ville de départ' })
+  @IsString()
+  villeDepart: string;
+
+  @ApiPropertyOptional({
+    example: 'https://example.com/image.jpg',
+    description: 'Image de la destination (URL)',
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @ApiPropertyOptional({ description: 'Transport associé au voyage' })
+  @IsOptional()
   transport?: {
     type: string;
     compagnie?: string;
   };
 
-  @ApiPropertyOptional({ description: 'Informations sur le logement' })
+  @ApiPropertyOptional({ description: 'Logement associé au voyage' })
+  @IsOptional()
   logement?: {
     nom: string;
     adresse: string;
   };
 
-  @ApiPropertyOptional({ description: "Informations sur l'activité" })
+  @ApiPropertyOptional({ description: 'Activité associée au voyage' })
+  @IsOptional()
   activite?: {
-    nom?: string;
-    description?: string;
-    lieu?: string;
+    description: string;
+    lieu: string;
   };
 }

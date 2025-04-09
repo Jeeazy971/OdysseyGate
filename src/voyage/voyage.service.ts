@@ -1,4 +1,3 @@
-// src/voyage/voyage.service.ts
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -37,15 +36,15 @@ export class VoyageService {
       );
     }
 
-    // Création de l'entité Voyage en prenant en compte les nouvelles propriétés
+    // Création de l'entité Voyage avec les champs obligatoires et optionnels
     const voyage = this.voyageRepository.create({
       destination: dto.destination,
       dateDepart: depart,
       dateArrivee: arrivee,
       nombreVoyageurs: dto.nombreVoyageurs,
+      villeDepart: dto.villeDepart,
+      imageUrl: dto.imageUrl,
       user,
-      imageUrl: dto.imageUrl, // Nouvelle propriété imageUrl
-      villeDepart: dto.villeDepart, // Nouvelle propriété villeDepart
     });
 
     // Création des entités associées si des informations sont fournies
@@ -69,6 +68,7 @@ export class VoyageService {
     // Activité
     if (dto.activite) {
       const activite = new ActiviteEntity();
+      // Correction apportée ici : utilisation de 'description' et 'lieu'
       activite.description = dto.activite.description;
       activite.lieu = dto.activite.lieu;
       voyage.activite = activite;
