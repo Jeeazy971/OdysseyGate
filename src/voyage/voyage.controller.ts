@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Get } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -26,12 +26,10 @@ export class VoyageController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: "Création d'un nouveau voyage avec toutes les informations",
-  })
+  @ApiOperation({ summary: 'Create a new voyage with all information' })
   @ApiResponse({
     status: 201,
-    description: 'Le voyage a été créé avec succès.',
+    description: 'The voyage has been successfully created.',
     type: VoyageEntity,
   })
   async create(
@@ -40,5 +38,20 @@ export class VoyageController {
   ): Promise<VoyageEntity> {
     const userId = req.user.id;
     return this.voyageService.createVoyage(createVoyageDto, userId);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Retrieve the list of voyages for the authenticated user',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of voyages retrieved successfully.',
+    type: [VoyageEntity],
+  })
+  async getMyVoyages(@Req() req: RequestWithUser): Promise<VoyageEntity[]> {
+    const userId = req.user.id;
+    return this.voyageService.getVoyagesByUser(userId);
   }
 }

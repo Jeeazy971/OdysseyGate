@@ -19,24 +19,21 @@ export class VoyageService {
     dto: CreateVoyageDto,
     userId: number,
   ): Promise<VoyageEntity> {
-    // Conversion des dates
     const depart = new Date(dto.dateDepart);
     const arrivee = new Date(dto.dateArrivee);
     if (isNaN(depart.getTime()) || isNaN(arrivee.getTime())) {
-      throw new InternalServerErrorException('Format de date invalide.');
+      throw new InternalServerErrorException('Invalid date format.');
     }
 
-    // Récupération de l'utilisateur complet depuis la BDD
     const user = await this.voyageRepository.manager.findOne(UserEntity, {
       where: { id: userId },
     });
     if (!user) {
       throw new InternalServerErrorException(
-        `L'utilisateur avec l'id ${userId} n'existe pas.`,
+        `User with id ${userId} not found.`,
       );
     }
 
-    // Création de l'entité Voyage avec les champs obligatoires et optionnels
     const voyage = this.voyageRepository.create({
       destination: dto.destination,
       dateDepart: depart,
@@ -47,9 +44,6 @@ export class VoyageService {
       user,
     });
 
-    // Création des entités associées si des informations sont fournies
-
-    // Transport
     if (dto.transport) {
       const transport = new TransportEntity();
       transport.type = dto.transport.type;
@@ -57,7 +51,6 @@ export class VoyageService {
       voyage.transport = transport;
     }
 
-    // Logement
     if (dto.logement) {
       const logement = new LogementEntity();
       logement.nom = dto.logement.nom;
@@ -65,15 +58,17 @@ export class VoyageService {
       voyage.logement = logement;
     }
 
-    // Activité
     if (dto.activite) {
       const activite = new ActiviteEntity();
-      // Correction apportée ici : utilisation de 'description' et 'lieu'
       activite.description = dto.activite.description;
       activite.lieu = dto.activite.lieu;
       voyage.activite = activite;
     }
 
     return this.voyageRepository.save(voyage);
+  }
+
+  async getVoyagesByUser(userId: number): Promise<VoyageEntity[]> {
+    return this.voyageRepository.find({ where: { user: { id: userId } } });
   }
 }

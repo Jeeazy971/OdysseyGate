@@ -28,10 +28,8 @@ export class AuthService {
       throw new ConflictException('Email already in use');
     }
 
-    // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    // Créer l'utilisateur
     const user = this.userRepository.create({
       nom: dto.nom,
       prenom: dto.prenom,
