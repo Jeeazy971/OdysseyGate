@@ -1,4 +1,3 @@
-// test/voyage/voyage.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { VoyageService } from '../../src/voyage/voyage.service';
@@ -25,6 +24,7 @@ describe('VoyageService', () => {
       manager: {
         findOne: jest.fn(),
       },
+      find: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -54,6 +54,8 @@ describe('VoyageService', () => {
       nom: 'Doe',
       prenom: 'John',
       email: 'john.doe@example.com',
+      password: 'hashedPassword',
+      voyages: [],
     });
 
     voyageRepositoryMock.create.mockImplementation((data) => data);
@@ -81,6 +83,8 @@ describe('VoyageService', () => {
         nom: 'Doe',
         prenom: 'John',
         email: 'john.doe@example.com',
+        password: 'hashedPassword',
+        voyages: [],
       },
     });
 
@@ -104,12 +108,14 @@ describe('VoyageService', () => {
       nom: 'Doe',
       prenom: 'John',
       email: 'john.doe@example.com',
+      password: 'hashedPassword',
+      voyages: [],
     });
 
     voyageRepositoryMock.create.mockImplementation((data) => data);
     voyageRepositoryMock.save.mockImplementation(async (entity) => ({
       ...entity,
-      id: 2, // Par exemple, un id différent pour différencier le test
+      id: 2,
     }));
 
     const result = await service.createVoyage(dto, 1);
@@ -131,6 +137,8 @@ describe('VoyageService', () => {
         nom: 'Doe',
         prenom: 'John',
         email: 'john.doe@example.com',
+        password: 'hashedPassword',
+        voyages: [],
       },
     });
 
@@ -139,5 +147,63 @@ describe('VoyageService', () => {
     expect(result.destination).toBe('Paris');
     expect(result.imageUrl).toBe('https://example.com/paris.jpg');
     expect(result.villeDepart).toBe('Lyon');
+  });
+
+  it('should retrieve voyages for a given user id', async () => {
+    const voyages: VoyageEntity[] = [
+      {
+        id: 1,
+        destination: 'Paris',
+        dateDepart: new Date('2025-04-10'),
+        dateArrivee: new Date('2025-04-20'),
+        nombreVoyageurs: 2,
+        villeDepart: 'Lyon',
+        imageUrl: undefined,
+        user: {
+          id: 1,
+          nom: 'Doe',
+          prenom: 'John',
+          email: 'john.doe@example.com',
+          password: 'hashedPassword',
+          voyages: [],
+        },
+        transport: undefined,
+        logement: undefined,
+        activite: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 2,
+        destination: 'Rome',
+        dateDepart: new Date('2025-05-01'),
+        dateArrivee: new Date('2025-05-10'),
+        nombreVoyageurs: 2,
+        villeDepart: 'Lyon',
+        imageUrl: 'https://example.com/rome.jpg',
+        user: {
+          id: 1,
+          nom: 'Doe',
+          prenom: 'John',
+          email: 'john.doe@example.com',
+          password: 'hashedPassword',
+          voyages: [],
+        },
+        transport: undefined,
+        logement: undefined,
+        activite: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    voyageRepositoryMock.find.mockResolvedValue(voyages);
+
+    const result = await service.getVoyagesByUser(1);
+
+    expect(voyageRepositoryMock.find).toHaveBeenCalledWith({
+      where: { user: { id: 1 } },
+    });
+    expect(result).toEqual(voyages);
   });
 });

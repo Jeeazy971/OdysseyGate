@@ -43,7 +43,6 @@ export class VoyageEntity {
   @ApiProperty({ example: 2, description: 'Nombre de voyageurs' })
   nombreVoyageurs: number;
 
-  // Nouvelle colonne pour l'image de la destination
   @Column({ nullable: true })
   @ApiPropertyOptional({
     example: 'https://example.com/image.jpg',
@@ -51,7 +50,6 @@ export class VoyageEntity {
   })
   imageUrl?: string;
 
-  // Nouvelle colonne pour la ville de départ
   @Column({ nullable: true })
   @ApiPropertyOptional({
     example: 'Lyon',
