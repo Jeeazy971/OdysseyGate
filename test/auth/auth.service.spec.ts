@@ -92,8 +92,9 @@ describe('AuthService - Login', () => {
     let jwtServiceMock: Partial<JwtService>;
 
     beforeEach(async () => {
+        // Définir findOne dans le mock pour qu'il soit disponible pour la méthode login
         userRepositoryMock = {
-            findOneBy: jest.fn(),
+            findOne: jest.fn(),
         };
         jwtServiceMock = {
             signAsync: jest.fn(),
@@ -117,13 +118,13 @@ describe('AuthService - Login', () => {
     });
 
     it('should throw UnauthorizedException if email not found', async () => {
-        (userRepositoryMock.findOneBy as jest.Mock).mockResolvedValue(null);
+        (userRepositoryMock.findOne as jest.Mock).mockResolvedValue(null);
         const dto: LoginDto = { email: 'notfound@example.com', password: 'test123' };
         await expect(authService.login(dto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException if password mismatch', async () => {
-        (userRepositoryMock.findOneBy as jest.Mock).mockResolvedValue({
+        (userRepositoryMock.findOne as jest.Mock).mockResolvedValue({
             id: 1,
             email: 'john.doe@example.com',
             password: 'hashedpassword',
@@ -135,7 +136,7 @@ describe('AuthService - Login', () => {
     });
 
     it('should return access_token if credentials are valid', async () => {
-        (userRepositoryMock.findOneBy as jest.Mock).mockResolvedValue({
+        (userRepositoryMock.findOne as jest.Mock).mockResolvedValue({
             id: 1,
             email: 'john.doe@example.com',
             password: 'hashedpassword',
@@ -148,3 +149,4 @@ describe('AuthService - Login', () => {
         expect(result).toEqual({ access_token: 'mockedToken' });
     });
 });
+

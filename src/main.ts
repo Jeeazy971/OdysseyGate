@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('Odyssey Gate API')
     .setDescription("Documentation de l'API pour l'application Odyssey Gate")
     .setVersion('1.0')
-    // La configuration du Bearer Token
     .addBearerAuth(
       {
         type: 'http',
@@ -17,14 +16,14 @@ async function bootstrap() {
         bearerFormat: 'JWT',
         in: 'header',
       },
-      'access-token' // nom de la stratégie (sera utilisé dans les décorateurs que j'ai mis)
+      'access-token',
     )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  // Et la redirection de la racine vers Swagger
+  // Redirection de la racine vers Swagger
   app.getHttpAdapter().get('/', (req, res) => {
     res.redirect('/api-docs');
   });
