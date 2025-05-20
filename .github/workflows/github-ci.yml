@@ -6,10 +6,14 @@ on:
       - main
       - develop
       - feature/*
+      - bugfix/*
+      - hotfix/*
   pull_request:
     branches:
       - develop
       - feature/*
+      - bugfix/*
+      - hotfix/*
 
 jobs:
   ci:
