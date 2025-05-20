@@ -10,6 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "start:prod": "node dist/main.js",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\" --fix --no-ignore",
     "test": "jest --config ./jest.config.js",
