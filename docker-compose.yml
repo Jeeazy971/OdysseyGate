@@ -1,45 +1,39 @@
 version: '3.8'
 
 services:
-  mysql:
-    container_name: odyssey_gate_bdd
-    image: mysql:8.0
+  db:
+    image: postgres:15-alpine
+    container_name: odyssey_gate_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: your_mysql_password
-      MYSQL_DATABASE: odyssey_gate_dev
-    command: --default-authentication-plugin=mysql_native_password
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB:   ${DB_NAME}
     ports:
-      - "3307:3306"
+      - "${DB_PORT}:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    container_name: odyssey_gate_api
     build:
       context: .
       dockerfile: Dockerfile
       target: ${TARGET_STAGE:-development}
+    container_name: odyssey_gate_api
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db            
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASS: your_mysql_password
-      DB_NAME: odyssey_gate_dev
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
 
 volumes:
-  mysql_data:
+  db_data:

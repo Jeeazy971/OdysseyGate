@@ -1,5 +1,5 @@
 # Étape de base : Installation des dépendances
-FROM node:22.9.0-alpine AS base
+FROM node:22.15.0-alpine3.20 AS base
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -7,16 +7,15 @@ WORKDIR /app
 # Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
-# Installer les dépendances de base
+# Installation les dépendances de base
 RUN npm install
 
-# Copier le reste du code (sera utilisé dans les deux étapes)
 COPY . .
 
 # Étape de développement
 FROM base AS development
 
-# Installer les dépendances de développement
+# Installation les dépendances de développement
 RUN npm install --only=dev
 
 # Exposer le port pour le développement
