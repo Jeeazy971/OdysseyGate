@@ -23,7 +23,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  // Redirection de la racine vers Swagger
   app.getHttpAdapter().get('/', (req, res) => {
     res.redirect('/api-docs');
   });

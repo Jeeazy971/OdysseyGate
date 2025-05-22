@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { VoyageEntity } from './entities/voyage.entity';
 import { CreateVoyageDto } from './dto/create-voyage.dto';
 import { UserEntity } from '../auth/entities/user.entity';
-import { TransportEntity } from './entities/transport.entity';
+import { TransportEntity } from '../transport/entities/transport.entity';
 import { LogementEntity } from './entities/logement.entity';
 import { ActiviteEntity } from './entities/activite.entity';
 
